@@ -72,7 +72,8 @@ function httpRequest($method='get',$url,$headers=array(),$postfields=null,$debug
         case "POST":
             curl_setopt($ci, CURLOPT_POST, true);
             if (!empty($postfields)) {
-                $tmpdatastr = is_array($postfields) ? http_build_query($postfields) : $postfields;
+                $tmpdatastr = is_array($postfields) ? json_encode($postfields) : $postfields;
+                //$tmpdatastr = is_array($postfields) ? http_build_query($postfields) : $postfields;
                 curl_setopt($ci, CURLOPT_POSTFIELDS, $tmpdatastr);
             }
             break;
@@ -96,11 +97,11 @@ function httpRequest($method='get',$url,$headers=array(),$postfields=null,$debug
     $requestinfo = curl_getinfo($ci);
     $http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     if ($debug) {
-        echo "=====post data======\r\n";
+        echo "=====post data======\r\n".'<br>';
         var_dump($postfields);
-        echo "=====info===== \r\n";
+        echo '<br>'."=====info===== \r\n".'<br>';
         print_r($requestinfo);
-        echo "=====response=====\r\n";
+        echo '<br>'."=====response=====\r\n".'<br>';
         print_r($response);
     }
     curl_close($ci);
@@ -115,12 +116,21 @@ $sign = array(
 	'appSecret'=>'PFND9hffNZHmtgZvUCEq2Bn4TDHgazjI',
 	'date'=>$timestamp
 );
-$md5 = md5($sign['appSecret'].$sign['appkey'].$sign['date']);
 
+$md5 = md5($sign['appSecret'].$sign['appkey'].$sign['date']);
 $addArray = array(
     'appkey' => $sign['appkey'],
     'timestamp' => $timestamp,
     'sign' => $md5
+);
+
+$appuid = 'pdgs';
+$md5_appuid = md5($sign['appSecret'].$sign['appkey'].$appuid.$sign['date']);
+$addArray_appuid = array(
+    'appkey' => $sign['appkey'],
+    'timestamp' => $timestamp,
+    'appuid' => $appuid,
+    'sign' => $md5_appuid
 );
 
 // 获取账号体系根节点信息 
@@ -134,7 +144,6 @@ echo '<b>timestamp:</b> '.$timestamp.'<br>';
 echo '<b>sign:</b> '.md5($sign['appSecret'].$sign['appkey'].$sign['date']).'<br>';
 $echo1 = httpRequest('get',$url);
 $echo = json_decode($echo1,true);
-// $echo = geturl($url);
 echo '<b>获取账号体系根节点信息:</b><br><pre>';
 var_dump($echo);
 echo '</pre><br>';
@@ -142,19 +151,20 @@ echo '</pre><br>';
 //账号注册绑定接口
 //open.kujiale.com/open/apps/1/docs?doc_id=524&tab_id=api&path=0_58_433_524&tag_id=3
 $url = 'https://sandbox-openapi.kujiale.com/v2/register';
-// $url .= '?timestamp='.$sign['date'].'&';
-// $url .= 'appkey='.$sign['appkey'].'&';
-// $url .= 'appuid=1&';
-// $url .= 'sign='.md5($sign['appSecret'].$sign['appkey'].'1'.$sign['date']);
-echo '<b>URL:</b> '.$url.'<br>';
-$data = array('name'=>'ABC');
-//$data = array_merge($data,$addArray);
-// $echo = posturl($url,$data);
-// echo '<b>建部门节点:</b><br><pre> ';
-// var_dump($echo);
-// echo '</pre><br>';
-  
-$headerArray =array("Content-type:application/json;charset='utf-8'","Accept:application/json");
-// echo httpRequest($url,'POST',$data,$headerArray);
+$data = array(
+    "name"=>"newName",
+    "email"=>"user@kujiale.com"
+);
+$headerArray =array("Content-Type: application/json;charset='utf-8'");
+$postfields = array_merge($data,$addArray_appuid);
 
+echo '<b>URL:</b> '.$url.'<br>';
+echo '<b>timestamp:</b> '.$timestamp.'<br>';
+echo '<b>appuid:</b> '.$appuid.'<br>';
+echo '<b>sign:</b> '.md5($sign['appSecret'].$sign['appkey'].$appuid.$sign['date']).'<br>';
+$echo1 = httpRequest('POST',$url,$headerArray,$postfields,1);
+$echo = json_decode($echo1,true);
+echo '<br><b>账号注册绑定接口:</b><br><pre>';
+var_dump($echo1);
+echo '</pre><br>';
 ?>
