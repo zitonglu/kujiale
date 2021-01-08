@@ -128,17 +128,20 @@ echo '</pre><br>';
 $url = 'https://sandbox-openapi.kujiale.com/v2/sso/token';
 $appuid = 'sogie';
 $url = urlMD5($url,$appuid);
+$url .= '&dest=0';
 $headerArray = array('Content-Type: application/json;charset=utf-8');
-$postfields = array(
-    'appuid' => $appuid,
-    'dest' => 1
-);
 echo '<b>URL:</b> '.$url.'<br>';
-$echo1 = httpRequest('POST',$url,$headerArray,$postfields,1);
+$echo1 = httpRequest('POST',$url,$headerArray);
 $echo = json_decode($echo1,true);
 echo '<br><b>获取单点登录token:</b><br><pre>';
 var_dump($echo);
 echo '</pre><br>';
+if ($echo['c']==0) {
+    $access_token = $echo['d'];
+    echo 'http://sandbox-openapi.kujiale.com/v/auth?accesstoken='.$access_token.'&dest=0<br>';
+    echo '<iframe src="http://sandbox-openapi.kujiale.com/v/auth?accesstoken='.$access_token.'&dest=0"><br>';
+}
+
 
 
 //搜索账户
