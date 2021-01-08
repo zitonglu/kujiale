@@ -58,7 +58,7 @@ function httpRequest($method='get',$url,$headers=array(),$postfields=null,$debug
     //return array($http_code, $response,$requestinfo);
 }
 /**
- * URL增加？后缀
+ * 开放 API 沙箱环境账号URL增加？后缀
  * @param $url 请求url地址
  * @param $appuid 酷家乐要求的对应参数
  * @return string url 新网址
@@ -67,7 +67,6 @@ function UrlMD5($url,$appuid=null){
     $timestamp = date_timestamp_get(date_create())*1000;
     $appkey = 'nnukVb2cN0';
     $appSecret = 'PFND9hffNZHmtgZvUCEq2Bn4TDHgazjI';
-
     $url .= '?timestamp='.$timestamp;
     $url .= '&appkey='.$appkey;
     if (empty($appuid)) {
@@ -138,8 +137,8 @@ var_dump($echo);
 echo '</pre><br>';
 if ($echo['c']==0) {
     $access_token = $echo['d'];
-    echo 'http://sandbox-openapi.kujiale.com/v/auth?accesstoken='.$access_token.'&dest=0<br>';
-    echo '<iframe src="http://sandbox-openapi.kujiale.com/v/auth?accesstoken='.$access_token.'&dest=0"><br>';
+    echo 'https://sandbox.kujiale.com/v/auth?accesstoken='.$access_token.'&dest=0<br>';
+    echo '<iframe src="https://sandbox.kujiale.com/v/auth?accesstoken='.$access_token.'&dest=0" height="100%" width="100%"><br>';
 }
 
 
