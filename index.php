@@ -111,8 +111,8 @@ echo '</pre><br>';
 // $url = 'https://sandbox-openapi.kujiale.com/v2/register';
 // $urlMD5 = urlMD5($url,'sogie');
 // $postfields = array(
-//     "name"=>"newName",
-//     "email"=>"useqweqwer@kujiale.com"
+//     'name'=>'newName',
+//     'email'=>'useqweqwer@kujiale.com'
 // );
 // $headerArray =array("Content-Type: application/json;charset='utf-8'");
 
@@ -122,4 +122,41 @@ echo '</pre><br>';
 // echo '<br><b>账号注册绑定接口:</b><br><pre>';
 // var_dump($echo);
 // echo '</pre><br>';
+
+//获取单点登录token
+//open.kujiale.com/open/apps/1/docs?doc_id=396&tab_id=api&path=0_51_396
+$url = 'https://sandbox-openapi.kujiale.com/v2/sso/token';
+$appuid = 'sogie';
+$url = urlMD5($url,$appuid);
+$headerArray = array('Content-Type: application/json;charset=utf-8');
+$postfields = array(
+    'appuid' => $appuid,
+    'dest' => 1
+);
+echo '<b>URL:</b> '.$url.'<br>';
+$echo1 = httpRequest('POST',$url,$headerArray,$postfields,1);
+$echo = json_decode($echo1,true);
+echo '<br><b>获取单点登录token:</b><br><pre>';
+var_dump($echo);
+echo '</pre><br>';
+
+
+//搜索账户
+//open.kujiale.com/open/apps/1/docs?doc_id=518&tab_id=api&path=0_58_516_518
+$url = 'https://sandbox-openapi.kujiale.com/v2/account/search';
+$url = urlMD5($url);
+$headerArray = array('Content-Type: application/json;');
+$postfields = array(
+    'start'=>0,
+    'num'=>5,
+    'name'=>'newName'
+);
+
+echo '<b>URL:</b> '.$url.'<br>';
+$echo1 = httpRequest('POST',$url,$headerArray,$postfields);
+$echo = json_decode($echo1,true);
+echo '<br><b>获取帐号信息:</b><br><pre>';
+var_dump($echo);
+echo '</pre><br>';
+
 ?>
