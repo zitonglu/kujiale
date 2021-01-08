@@ -92,20 +92,34 @@ echo '<b>获取账号体系根节点信息:</b><br><pre>';
 var_dump($echo);
 echo '</pre><br>';
 
-//账号注册绑定接口
-//open.kujiale.com/open/apps/1/docs?doc_id=524&tab_id=api&path=0_58_433_524&tag_id=3
-$url = 'https://sandbox-openapi.kujiale.com/v2/register';
-$urlMD5 = urlMD5($url,'sogie');
-$data = array(
-    "name"=>"newName",
-    "email"=>"user@kujiale.com"
-);
-$headerArray =array("Content-Type: application/json;charset='utf-8'");
+// 获取帐号信息
+//open.kujiale.com/open/apps/1/docs?doc_id=66&tab_id=api&path=0_58_66
+$url = 'https://sandbox-openapi.kujiale.com/v2/user';
+$url = urlMD5($url);
+$url .= '&num=4&start=0';
+$headerArray = array("Content-Type:text/plain;charset='utf-8'");
 
 echo '<b>URL:</b> '.$url.'<br>';
-$echo1 = httpRequest('POST',$urlMD5,$headerArray,$postfields);
+$echo1 = httpRequest('get',$url,$headerArray);
 $echo = json_decode($echo1,true);
-echo '<br><b>账号注册绑定接口:</b><br><pre>';
+echo '<br><b>获取帐号信息:</b><br><pre>';
 var_dump($echo);
 echo '</pre><br>';
+
+//账号注册绑定接口2021-1-8成功
+//open.kujiale.com/open/apps/1/docs?doc_id=524&tab_id=api&path=0_58_433_524&tag_id=3
+// $url = 'https://sandbox-openapi.kujiale.com/v2/register';
+// $urlMD5 = urlMD5($url,'sogie');
+// $postfields = array(
+//     "name"=>"newName",
+//     "email"=>"useqweqwer@kujiale.com"
+// );
+// $headerArray =array("Content-Type: application/json;charset='utf-8'");
+
+// echo '<b>URL:</b> '.$url.'<br>';
+// $echo1 = httpRequest('POST',$urlMD5,$headerArray,$postfields);
+// $echo = json_decode($echo1,true);
+// echo '<br><b>账号注册绑定接口:</b><br><pre>';
+// var_dump($echo);
+// echo '</pre><br>';
 ?>
